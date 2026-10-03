@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#fffaf8">
+<title>THAN ZAW HTUT & EI EI PHYO • Wedding Memories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Montserrat:wght@300;400;500&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#4b3b3b; --muted:#8b7777; --rose:#c98793; --rose2:#efd4d8;
+    --cream:#fffaf8; --card:#ffffff; --line:#eadedf; --gold:#c9a86a;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{background:var(--cream);color:var(--ink);
+    font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden}
+  button{font:inherit;color:inherit}
+
+  .page{max-width:720px;margin:auto;padding:22px 16px 60px;position:relative;z-index:2}
+
+  /* ═══ HERO ═══ */
+  .hero{text-align:center;padding:30px 8px 14px;position:relative}
+  .eyebrow{font-family:'Montserrat',Arial,sans-serif;letter-spacing:5px;
+    text-transform:uppercase;font-size:10px;color:var(--rose);font-weight:500}
+  .ornament{display:flex;align-items:center;justify-content:center;
+    gap:10px;margin:16px auto;max-width:220px}
+  .ornament::before,.ornament::after{content:'';flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,var(--rose2),transparent)}
+  .ornament span{color:var(--gold);font-size:14px}
+  h1{font-weight:300;font-size:36px;line-height:1.15;margin:14px 0 8px;
+    letter-spacing:.5px}
+  h1 .amp{display:block;font-style:italic;font-size:22px;color:var(--rose);
+    margin:6px 0;font-weight:300}
+  .date{font-family:'Montserrat',Arial,sans-serif;color:var(--muted);
+    font-size:11px;letter-spacing:3px;font-weight:400;margin-top:10px}
+
+  /* ═══ COUNTDOWN ═══ */
+  .countdown{display:flex;justify-content:center;gap:14px;margin:22px 0 4px;
+    font-family:'Montserrat',Arial,sans-serif}
+  .cd-item{text-align:center;min-width:52px}
+  .cd-num{font-size:20px;font-weight:500;color:var(--ink);letter-spacing:1px}
+  .cd-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);
+    text-transform:uppercase;margin-top:2px}
+  .cd-sep{color:var(--rose2);font-size:20px;align-self:center;margin-top:-8px}
+
+  /* ═══ CTA BUTTON ═══ */
+  .cta-wrap{text-align:center;margin:34px auto 24px;padding:0 8px}
+  .cta{
+    display:inline-flex;align-items:center;gap:12px;
+    background:linear-gradient(135deg,#d68b99,#c98793);
+    color:#fff;border:0;border-radius:999px;
+    padding:18px 42px;font-family:'Montserrat',Arial,sans-serif;
+    font-size:14px;font-weight:500;letter-spacing:2.5px;
+    text-transform:uppercase;cursor:pointer;
+    box-shadow:0 14px 30px -12px rgba(180,90,110,.6);
+    transition:all .3s cubic-bezier(.2,0,.2,1);
+    animation:glow 2.6s ease-in-out infinite;
+  }
+  .cta:hover{
+    transform:translateY(-2px);
+    box-shadow:0 20px 40px -12px rgba(180,90,110,.75);
+  }
+  .cta:active{transform:translateY(0) scale(.97)}
+  .cta .icon{font-size:18px;line-height:1}
+  @keyframes glow{
+    0%,100%{box-shadow:0 14px 30px -12px rgba(180,90,110,.6)}
+    50%{box-shadow:0 14px 34px -10px rgba(180,90,110,.85),
+         0 0 0 8px rgba(201,135,147,.1)}
+  }
+  .cta-hint{font-family:'Montserrat',Arial,sans-serif;font-size:10px;
+    color:var(--muted);letter-spacing:2px;text-transform:uppercase;
+    margin-top:16px}
+
+  /* ═══ FALLING PETALS ═══ */
+  .petals{position:fixed;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:1;overflow:hidden}
+  .petal{position:absolute;top:-30px;color:var(--rose2);
+    font-size:14px;opacity:.55;animation:fall linear infinite}
+  @keyframes fall{
+    0%{transform:translateY(-30px) rotate(0);opacity:0}
+    10%{opacity:.6}
+    90%{opacity:.4}
+    100%{transform:translateY(110vh) rotate(360deg);opacity:0}
+  }
+
+  /* ═══ GALLERY ═══ */
+  .gallery{display:none}
+  .gallery.open{display:block;animation:fade .55s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .gallery-head{text-align:center;padding:24px 4px 18px}
+  .gallery-head h2{font-weight:300;margin:0 0 8px;font-size:28px;
+    letter-spacing:.5px}
+  .gallery-head p{margin:0;color:var(--muted);font-family:'Montserrat',Arial,sans-serif;
+    font-size:10px;letter-spacing:2.5px;text-transform:uppercase}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .photo{border:0;padding:0;aspect-ratio:1;overflow:hidden;background:#eee;
+    cursor:pointer;border-radius:6px;position:relative}
+  .photo::after{content:'';position:absolute;inset:0;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);border-radius:6px;
+    pointer-events:none}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .5s cubic-bezier(.2,0,.2,1)}
+  .photo:active img{transform:scale(.96)}
+  @media (hover:hover){.photo:hover img{transform:scale(1.06)}}
+
+  .note{text-align:center;margin:24px 0 0;color:var(--muted);
+    font:11px/1.8 'Montserrat',Arial,sans-serif;letter-spacing:.5px}
+
+  /* ═══ VIEWER ═══ */
+  .viewer{position:fixed;inset:0;background:rgba(25,17,19,.97);z-index:50;
+    display:none;align-items:center;justify-content:center;touch-action:none}
+  .viewer.open{display:flex;animation:vin .3s ease}
+  @keyframes vin{from{opacity:0}to{opacity:1}}
+  .viewer img{max-width:94vw;max-height:82vh;object-fit:contain;
+    user-select:none;border-radius:2px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+  .close,.nav{position:absolute;border:0;color:white;
+    background:rgba(255,255,255,.1);backdrop-filter:blur(8px);
+    width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+    cursor:pointer;font-family:Arial,sans-serif;font-size:22px;
+    transition:background .2s}
+  .close:hover,.nav:hover{background:rgba(255,255,255,.22)}
+  .close{right:16px;top:16px}.prev{left:12px}.next{right:12px}
+  .counter{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+    color:white;font:12px 'Montserrat',Arial,sans-serif;letter-spacing:2px;
+    background:rgba(0,0,0,.35);padding:8px 14px;border-radius:20px;
+    backdrop-filter:blur(8px)}
+
+  .empty{grid-column:1/-1;padding:40px 18px;text-align:center;color:var(--muted);
+    border:1px dashed var(--line);border-radius:12px;
+    font-family:'Montserrat',Arial,sans-serif;font-size:12px}
+
+  @media (max-width:480px){
+    h1{font-size:28px}
+    .cd-num{font-size:17px}
+    .cd-item{min-width:44px}
+    .cta{padding:16px 34px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+
+<div class="petals" id="petals"></div>
+
+<main class="page">
+  <section class="hero">
+    <div class="eyebrow">Our Wedding Memories</div>
+    <div class="ornament"><span>✦</span></div>
+    <h1>THAN ZAW HTUT <span class="amp">&amp;</span> EI EI PHYO</h1>
+    <div class="date">15 • 11 • 2026</div>
+    <div class="countdown" id="countdown">
+      <div class="cd-item"><div class="cd-num" id="cdD">--</div><div class="cd-lbl">Days</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-item"><div class="cd-num" id="cdH">--</div><div class="cd-lbl">Hours</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-item"><div class="cd-num" id="cdM">--</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-sep">·</div>
+      <div class="cd-item"><div class="cd-num" id="cdS">--</div><div class="cd-lbl">Sec</div></div>
+    </div>
+  </section>
+
+  <section class="cta-wrap">
+    <button class="cta" id="openBtn" type="button">
+      <span class="icon">❀</span>
+      <span>ကြည့်မယ်</span>
+    </button>
+    <div class="cta-hint">Tap to view our memories</div>
+  </section>
+
+  <section id="gallery" class="gallery" aria-live="polite">
+    <div class="gallery-head">
+      <h2>Our Wedding Memories</h2>
+      <p>Than Zaw Htut &amp; Ei Ei Phyo • 15.11.2026</p>
+    </div>
+    <div id="grid" class="grid"></div>
+    <p class="note">Photos from our special day</p>
+  </section>
+</main>
+
+<div id="viewer" class="viewer" aria-modal="true" role="dialog">
+  <button id="close" class="close" type="button" aria-label="Close">×</button>
+  <button id="prev" class="nav prev" type="button" aria-label="Previous">‹</button>
+  <img id="viewerImg" alt="Wedding memory">
+  <button id="next" class="nav next" type="button" aria-label="Next">›</button>
+  <div id="counter" class="counter">1 / 1</div>
+</div>
+
+<script>
+(() => {
+  const root = document;
+  const gallery = root.getElementById('gallery');
+  const grid = root.getElementById('grid');
+  const viewer = root.getElementById('viewer');
+  const viewerImg = root.getElementById('viewerImg');
+  const counter = root.getElementById('counter');
+  const openBtn = root.getElementById('openBtn');
+
+  // === PHOTOS_START ===
+  // ⬇️ ဓာတ်ပုံ အသစ် ထည့်ရင် ဒီ array ထဲ ထပ်ထည့်ပါ
+  // ပုံစံ: { src: "https://i.imgur.com/XXXX.jpg", alt: "..." }
+  const photos = [
+    { src: "https://i.imgur.com/CHShSk6h.jpg", alt: "Wedding memory 1" }
+  ];
+  // === PHOTOS_END ===
+
+  let current = 0;
+  let startX = 0;
+
+  // ═══ Countdown ═══
+  const target = new Date('2026-11-15T09:00:00');
+  function tick(){
+    const d = Math.max(0, target - new Date());
+    const days = Math.floor(d / 86400000);
+    const hrs  = Math.floor(d % 86400000 / 3600000);
+    const min  = Math.floor(d % 3600000 / 60000);
+    const sec  = Math.floor(d % 60000 / 1000);
+    const el = id => root.getElementById(id);
+    el('cdD').textContent = String(days).padStart(2,'0');
+    el('cdH').textContent = String(hrs).padStart(2,'0');
+    el('cdM').textContent = String(min).padStart(2,'0');
+    el('cdS').textContent = String(sec).padStart(2,'0');
+  }
+  tick(); setInterval(tick, 1000);
+
+  // ═══ Falling petals ═══
+  (function petals(){
+    const wrap = root.getElementById('petals');
+    const glyphs = ['❀','✿','❁','✾','❃'];
+    for (let i = 0; i < 14; i++){
+      const p = root.createElement('div');
+      p.className = 'petal';
+      p.textContent = glyphs[i % glyphs.length];
+      p.style.left = Math.random() * 100 + '%';
+      p.style.fontSize = (10 + Math.random() * 12) + 'px';
+      p.style.animationDuration = (10 + Math.random() * 12) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      wrap.appendChild(p);
+    }
+  })();
+
+  function openGallery(){
+    gallery.classList.add('open');
+    setTimeout(() => gallery.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+  }
+
+  function renderGallery(){
+    if (!photos.length){
+      grid.innerHTML = '<div class="empty">Photos coming soon</div>';
+      return;
+    }
+    grid.innerHTML = photos.map((p,i) => `
+      <button class="photo" type="button" data-index="${i}" aria-label="Open photo ${i+1}">
+        <img loading="lazy" src="${p.src}" alt="${p.alt}">
+      </button>
+    `).join('');
+  }
+
+  function openViewer(index){
+    current = (index + photos.length) % photos.length;
+    viewerImg.src = photos[current].src;
+    viewerImg.alt = photos[current].alt;
+    counter.textContent = `${current+1} / ${photos.length}`;
+    viewer.classList.add('open');
+  }
+
+  function closeViewer(){ viewer.classList.remove('open'); }
+  function move(step){ openViewer(current + step); }
+
+  openBtn.addEventListener('click', openGallery);
+
+  grid.addEventListener('click', e => {
+    const btn = e.target.closest('.photo');
+    if(btn) openViewer(Number(btn.dataset.index));
+  });
+
+  root.getElementById('close').addEventListener('click', closeViewer);
+  root.getElementById('prev').addEventListener('click', () => move(-1));
+  root.getElementById('next').addEventListener('click', () => move(1));
+
+  viewer.addEventListener('click', e => { if(e.target === viewer) closeViewer(); });
+
+  viewer.addEventListener('touchstart', e => {
+    startX = e.changedTouches[0].clientX;
+  }, {passive:true});
+  viewer.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 55) move(dx < 0 ? 1 : -1);
+  }, {passive:true});
+
+  root.addEventListener('keydown', e => {
+    if(!viewer.classList.contains('open')) return;
+    if(e.key === 'Escape') closeViewer();
+    if(e.key === 'ArrowLeft') move(-1);
+    if(e.key === 'ArrowRight') move(1);
+  });
+
+  renderGallery();
+})();
+</script>
+</body>
+</html>
