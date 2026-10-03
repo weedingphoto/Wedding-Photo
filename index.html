@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#fffaf8">
 <title>THAN ZAW HTUT & EI EI PHYO • Wedding Memories</title>
+<script>document.documentElement.classList.remove('no-js');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://i.postimg.cc" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Montserrat:wght@300;400;500&family=Great+Vibes&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -296,11 +298,12 @@
 
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .photo{
-    border:0;padding:0;aspect-ratio:1;overflow:hidden;background:#eee;
+    border:0;padding:0;aspect-ratio:1;overflow:hidden;background:#f3e9ea;
     cursor:pointer;border-radius:8px;position:relative;
     box-shadow:0 4px 12px -8px rgba(150,90,105,.5);
     opacity:0;transform:translateY(20px) scale(.95);
     animation:photoIn .6s ease forwards;
+    display:grid;place-items:center;
   }
   @keyframes photoIn{to{opacity:1;transform:none}}
   .photo::after{
@@ -313,6 +316,10 @@
     width:100%;height:100%;object-fit:cover;display:block;
     transition:transform .5s cubic-bezier(.2,0,.2,1);
   }
+  .photo.broken::before{
+    content:'❀';position:absolute;font-size:26px;color:var(--rose2);
+  }
+  .photo.broken img{display:none}
   .photo:active img{transform:scale(.96)}
   @media (hover:hover){.photo:hover img{transform:scale(1.08)}}
 
@@ -349,6 +356,17 @@
     color:white;font:11px 'Montserrat',Arial,sans-serif;letter-spacing:2px;
     background:rgba(0,0,0,.4);padding:8px 16px;border-radius:20px;
     backdrop-filter:blur(8px);
+  }
+
+  /* ═══════ SAFETY NET (JS မရ / animation မရရင်) ═══════ */
+  .no-js .monogram,.no-js .eyebrow,.no-js .ornament,.no-js .names,
+  .no-js .date,.no-js .countdown,.no-js .details,.no-js .calendar-wrap,
+  .no-js .cta-wrap{opacity:1;animation:none}
+  .no-js .petals{display:none}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001s !important;animation-delay:0s !important}
+    .petal{display:none}
   }
 
   @media (max-width:480px){
@@ -473,17 +491,20 @@
 </div>
 
 <script>
-(() => {
-  const root = document;
-  const gallery = root.getElementById('gallery');
-  const grid = root.getElementById('grid');
-  const viewer = root.getElementById('viewer');
-  const viewerImg = root.getElementById('viewerImg');
-  const counter = root.getElementById('counter');
-  const openBtn = root.getElementById('openBtn');
-  const calBtn = root.getElementById('calBtn');
+(function () {
+  'use strict';
 
-  const WEDDING = {
+  var $ = function (id) { return document.getElementById(id); };
+
+  var gallery   = $('gallery');
+  var grid      = $('grid');
+  var viewer    = $('viewer');
+  var viewerImg = $('viewerImg');
+  var counter   = $('counter');
+  var openBtn   = $('openBtn');
+  var calBtn    = $('calBtn');
+
+  var WEDDING = {
     title: "THAN ZAW HTUT & EI EI PHYO — Wedding",
     date: "2026-11-15T09:00:00",
     endDate: "2026-11-15T12:00:00",
@@ -491,7 +512,7 @@
     details: "ကျွန်တော်တို့ရဲ့ မင်္ဂလာဆောင်သို့ ကြွရောက်ပေးပါရန် လေးစားစွာ ဖိတ်ခေါ်အပ်ပါသည်။"
   };
 
-  const photos = [
+  var photos = [
     { src: "https://i.postimg.cc/Pvh9xjRq/08c4521ca55e259360993ae9e78fd9ea.webp", alt: "Wedding memory 1" },
     { src: "https://i.postimg.cc/Fd0wNRG2/0bf3a9045f91905717417cf06ca94e1a.webp", alt: "Wedding memory 2" },
     { src: "https://i.postimg.cc/c6SLY8qc/12bfd787ceee037b587da82341e2d9ce.webp", alt: "Wedding memory 3" },
@@ -524,44 +545,51 @@
     { src: "https://i.postimg.cc/k6WLq4fR/faead7763046de3d5cf2969b55ce2b69.webp", alt: "Wedding memory 30" }
   ];
 
-  let current = 0;
-  let startX = 0;
+  var current = 0;
+  var startX = 0;
 
-  const target = new Date(WEDDING.date);
-  const prevVals = { d:null, h:null, m:null, s:null };
-  const itemMap = { d:'cdItemD', h:'cdItemH', m:'cdItemM', s:'cdItemS' };
-  const numMap  = { d:'cdD', h:'cdH', m:'cdM', s:'cdS' };
+  /* ---------- COUNTDOWN ---------- */
+  var target = new Date(WEDDING.date);
+  var prevVals = { d: null, h: null, m: null, s: null };
+  var itemMap = { d: 'cdItemD', h: 'cdItemH', m: 'cdItemM', s: 'cdItemS' };
+  var numMap  = { d: 'cdD', h: 'cdH', m: 'cdM', s: 'cdS' };
 
-  function tick(){
-    const d = Math.max(0, target - new Date());
-    const vals = {
-      d: Math.floor(d / 86400000),
-      h: Math.floor(d % 86400000 / 3600000),
-      m: Math.floor(d % 3600000 / 60000),
-      s: Math.floor(d % 60000 / 1000)
+  function tick() {
+    var diff = Math.max(0, target.getTime() - Date.now());
+    var vals = {
+      d: Math.floor(diff / 86400000),
+      h: Math.floor(diff % 86400000 / 3600000),
+      m: Math.floor(diff % 3600000 / 60000),
+      s: Math.floor(diff % 60000 / 1000)
     };
-    ['d','h','m','s'].forEach(k => {
-      const el = root.getElementById(numMap[k]);
-      const val = String(vals[k]).padStart(2,'0');
-      if (el.textContent !== val){
+    ['d', 'h', 'm', 's'].forEach(function (k) {
+      var el = $(numMap[k]);
+      if (!el) return;
+      var val = String(vals[k]).padStart(2, '0');
+      if (el.textContent !== val) {
         el.textContent = val;
-        if (prevVals[k] !== null){
-          const item = root.getElementById(itemMap[k]);
-          item.classList.remove('tick');
-          void item.offsetWidth;
-          item.classList.add('tick');
+        if (prevVals[k] !== null) {
+          var item = $(itemMap[k]);
+          if (item) {
+            item.classList.remove('tick');
+            void item.offsetWidth;
+            item.classList.add('tick');
+          }
         }
         prevVals[k] = val;
       }
     });
   }
-  tick(); setInterval(tick, 1000);
+  tick();
+  setInterval(tick, 1000);
 
-  (function petals(){
-    const wrap = root.getElementById('petals');
-    const glyphs = ['❀','✿','❁','✾','❃'];
-    for (let i = 0; i < 12; i++){
-      const p = root.createElement('div');
+  /* ---------- PETALS ---------- */
+  (function petals() {
+    var wrap = $('petals');
+    if (!wrap) return;
+    var glyphs = ['❀', '✿', '❁', '✾', '❃'];
+    for (var i = 0; i < 12; i++) {
+      var p = document.createElement('div');
       p.className = 'petal';
       p.textContent = glyphs[i % glyphs.length];
       p.style.left = Math.random() * 100 + '%';
@@ -572,108 +600,127 @@
     }
   })();
 
-  function toCalDate(iso){
-    return iso.replace(/[-:]/g,'').replace(/\.\d+/,'').slice(0,15);
+  /* ---------- CALENDAR ---------- */
+  function toCalDate(iso) {
+    return iso.replace(/[-:]/g, '').replace(/\.\d+/, '').slice(0, 15);
   }
 
-  function googleCalUrl(){
-    const p = new URLSearchParams({
+  function googleCalUrl() {
+    var p = new URLSearchParams({
       action: 'TEMPLATE',
       text: WEDDING.title,
-      dates: `${toCalDate(WEDDING.date)}/${toCalDate(WEDDING.endDate)}`,
+      dates: toCalDate(WEDDING.date) + '/' + toCalDate(WEDDING.endDate),
       details: WEDDING.details,
       location: WEDDING.location,
       ctz: 'Asia/Yangon'
     });
-    return `https://calendar.google.com/calendar/render?${p}`;
+    return 'https://calendar.google.com/calendar/render?' + p.toString();
   }
 
-  function downloadICS(){
-    const uid = 'wedding-' + Date.now() + '@weedingphoto.github.io';
-    const dtstamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'').slice(0,15) + 'Z';
-    const escape = s => String(s).replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
-    const ics = [
-      'BEGIN:VCALENDAR','VERSION:2.0',
-      'PRODID:-//Wedding//Invitation//EN','CALSCALE:GREGORIAN',
+  function downloadICS() {
+    var uid = 'wedding-' + Date.now() + '@wedding-invite';
+    var dtstamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '').slice(0, 15) + 'Z';
+    var esc = function (s) {
+      return String(s).replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+    };
+    var ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0',
+      'PRODID:-//Wedding//Invitation//EN', 'CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',
-      `UID:${uid}`,
-      `DTSTAMP:${dtstamp}`,
-      `DTSTART;TZID=Asia/Yangon:${toCalDate(WEDDING.date)}`,
-      `DTEND;TZID=Asia/Yangon:${toCalDate(WEDDING.endDate)}`,
-      `SUMMARY:${escape(WEDDING.title)}`,
-      `DESCRIPTION:${escape(WEDDING.details)}`,
-      `LOCATION:${escape(WEDDING.location)}`,
-      'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',
-      'DESCRIPTION:Wedding Tomorrow!','END:VALARM',
-      'END:VEVENT','END:VCALENDAR'
+      'UID:' + uid,
+      'DTSTAMP:' + dtstamp,
+      'DTSTART;TZID=Asia/Yangon:' + toCalDate(WEDDING.date),
+      'DTEND;TZID=Asia/Yangon:' + toCalDate(WEDDING.endDate),
+      'SUMMARY:' + esc(WEDDING.title),
+      'DESCRIPTION:' + esc(WEDDING.details),
+      'LOCATION:' + esc(WEDDING.location),
+      'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY',
+      'DESCRIPTION:Wedding Tomorrow!', 'END:VALARM',
+      'END:VEVENT', 'END:VCALENDAR'
     ].join('\r\n');
-    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'wedding-invitation.ics';
+
+    var blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'wedding-invitation.ics';
+    document.body.appendChild(a);
     a.click();
-    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
   }
 
-  calBtn.addEventListener('click', () => {
-    if (/iPad|iPhone|iPod/.test(navigator.userAgent)){
+  calBtn.addEventListener('click', function () {
+    var ua = navigator.userAgent;
+    if (/iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && 'ontouchend' in document)) {
       downloadICS();
     } else {
       window.open(googleCalUrl(), '_blank');
     }
   });
 
-  function openGallery(){
+  /* ---------- GALLERY ---------- */
+  function openGallery() {
     gallery.classList.add('open');
-    setTimeout(() => gallery.scrollIntoView({behavior:'smooth', block:'start'}), 60);
+    setTimeout(function () {
+      gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
   }
 
-  function renderGallery(){
-    grid.innerHTML = photos.map((p,i) => `
-      <button class="photo" type="button" data-index="${i}" aria-label="Open photo ${i+1}"
-              style="animation-delay:${i * 0.04}s">
-        <img loading="lazy" src="${p.src}" alt="${p.alt}">
-      </button>
-    `).join('');
+  function renderGallery() {
+    var html = '';
+    for (var i = 0; i < photos.length; i++) {
+      html += '<button class="photo" type="button" data-index="' + i + '"' +
+              ' aria-label="Open photo ' + (i + 1) + '"' +
+              ' style="animation-delay:' + (i * 0.04) + 's">' +
+              '<img loading="lazy" decoding="async" referrerpolicy="no-referrer"' +
+              ' src="' + photos[i].src + '" alt="' + photos[i].alt + '"' +
+              ' onerror="this.parentNode.classList.add(\'broken\')">' +
+              '</button>';
+    }
+    grid.innerHTML = html;
   }
 
-  function openViewer(index){
-    current = (index + photos.length) % photos.length;
+  function openViewer(index) {
+    current = ((index % photos.length) + photos.length) % photos.length;
     viewerImg.src = photos[current].src;
     viewerImg.alt = photos[current].alt;
-    counter.textContent = `${current+1} / ${photos.length}`;
+    counter.textContent = (current + 1) + ' / ' + photos.length;
     viewer.classList.add('open');
   }
 
-  function closeViewer(){ viewer.classList.remove('open'); }
-  function move(step){ openViewer(current + step); }
+  function closeViewer() { viewer.classList.remove('open'); }
+  function move(step) { openViewer(current + step); }
 
   openBtn.addEventListener('click', openGallery);
 
-  grid.addEventListener('click', e => {
-    const btn = e.target.closest('.photo');
-    if(btn) openViewer(Number(btn.dataset.index));
+  grid.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.photo') : null;
+    if (btn) openViewer(Number(btn.dataset.index));
   });
 
-  root.getElementById('close').addEventListener('click', closeViewer);
-  root.getElementById('prev').addEventListener('click', () => move(-1));
-  root.getElementById('next').addEventListener('click', () => move(1));
+  $('close').addEventListener('click', closeViewer);
+  $('prev').addEventListener('click', function () { move(-1); });
+  $('next').addEventListener('click', function () { move(1); });
 
-  viewer.addEventListener('click', e => { if(e.target === viewer) closeViewer(); });
+  viewer.addEventListener('click', function (e) {
+    if (e.target === viewer) closeViewer();
+  });
 
-  viewer.addEventListener('touchstart', e => {
+  viewer.addEventListener('touchstart', function (e) {
     startX = e.changedTouches[0].clientX;
-  }, {passive:true});
-  viewer.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if(Math.abs(dx) > 55) move(dx < 0 ? 1 : -1);
-  }, {passive:true});
+  }, { passive: true });
 
-  root.addEventListener('keydown', e => {
-    if(!viewer.classList.contains('open')) return;
-    if(e.key === 'Escape') closeViewer();
-    if(e.key === 'ArrowLeft') move(-1);
-    if(e.key === 'ArrowRight') move(1);
+  viewer.addEventListener('touchend', function (e) {
+    var dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 55) move(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  document.addEventListener('keydown', function (e) {
+    if (!viewer.classList.contains('open')) return;
+    if (e.key === 'Escape') closeViewer();
+    if (e.key === 'ArrowLeft') move(-1);
+    if (e.key === 'ArrowRight') move(1);
   });
 
   renderGallery();
