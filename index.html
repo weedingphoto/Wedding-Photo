@@ -12,42 +12,119 @@
   :root{
     --ink:#4b3b3b; --muted:#8b7777; --rose:#c98793; --rose2:#efd4d8;
     --cream:#fffaf8; --card:#ffffff; --line:#eadedf; --gold:#c9a86a;
+    --gold2:#e8d5a8;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
   body{background:var(--cream);color:var(--ink);
     font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden}
   button{font:inherit;color:inherit}
 
   .page{max-width:720px;margin:auto;padding:22px 16px 60px;position:relative;z-index:2}
 
-  /* ═══ HERO ═══ */
   .hero{text-align:center;padding:30px 8px 14px;position:relative}
-  .eyebrow{font-family:'Montserrat',Arial,sans-serif;letter-spacing:5px;
-    text-transform:uppercase;font-size:10px;color:var(--rose);font-weight:500}
-  .ornament{display:flex;align-items:center;justify-content:center;
-    gap:10px;margin:16px auto;max-width:220px}
-  .ornament::before,.ornament::after{content:'';flex:1;height:1px;
-    background:linear-gradient(90deg,transparent,var(--rose2),transparent)}
-  .ornament span{color:var(--gold);font-size:14px}
-  h1{font-weight:300;font-size:36px;line-height:1.15;margin:14px 0 8px;
-    letter-spacing:.5px}
-  h1 .amp{display:block;font-style:italic;font-size:22px;color:var(--rose);
-    margin:6px 0;font-weight:300}
-  .date{font-family:'Montserrat',Arial,sans-serif;color:var(--muted);
-    font-size:11px;letter-spacing:3px;font-weight:400;margin-top:10px}
+  .eyebrow{
+    font-family:'Montserrat',Arial,sans-serif;letter-spacing:5px;
+    text-transform:uppercase;font-size:10px;color:var(--rose);font-weight:500;
+    opacity:0;animation:fadeUp .9s .1s ease forwards;
+  }
+  .ornament{
+    display:flex;align-items:center;justify-content:center;
+    gap:10px;margin:16px auto;max-width:220px;
+    opacity:0;animation:fadeUp .9s .25s ease forwards;
+  }
+  .ornament::before,.ornament::after{
+    content:'';flex:1;height:1px;
+    background:linear-gradient(90deg,transparent,var(--rose2),transparent);
+  }
+  .ornament span{
+    color:var(--gold);font-size:14px;
+    animation:sparkle 3s ease-in-out infinite;
+  }
+  @keyframes sparkle{
+    0%,100%{opacity:.7;transform:scale(1) rotate(0deg)}
+    50%{opacity:1;transform:scale(1.15) rotate(15deg)}
+  }
+  h1{
+    font-weight:300;font-size:36px;line-height:1.15;margin:14px 0 8px;
+    letter-spacing:.5px;position:relative;
+    opacity:0;animation:fadeUp 1s .4s ease forwards;
+  }
+  h1 .amp{
+    display:block;font-style:italic;font-size:22px;color:var(--rose);
+    margin:6px 0;font-weight:300;
+  }
+  h1::before,h1::after{
+    content:'✦';
+    position:absolute;font-size:10px;color:var(--gold2);
+    opacity:0;animation:twinkle 2.5s ease-in-out infinite;
+  }
+  h1::before{top:6px;left:6%;animation-delay:.2s}
+  h1::after{bottom:8px;right:6%;animation-delay:1.2s}
+  @keyframes twinkle{
+    0%,100%{opacity:0;transform:scale(.5)}
+    50%{opacity:.9;transform:scale(1.3)}
+  }
+  .date{
+    font-family:'Montserrat',Arial,sans-serif;color:var(--muted);
+    font-size:11px;letter-spacing:3px;font-weight:400;margin-top:10px;
+    opacity:0;animation:fadeUp 1s .7s ease forwards;
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:none}
+  }
+  .countdown{
+    display:flex;justify-content:center;gap:14px;margin:22px 0 4px;
+    font-family:'Montserrat',Arial,sans-serif;
+    opacity:0;animation:fadeUp 1s 1s ease forwards;
+  }
+  .cd-item{text-align:center;min-width:52px;position:relative}
+  .cd-num{
+    font-size:20px;font-weight:500;color:var(--ink);letter-spacing:1px;
+    transition:color .4s;
+  }
+  .cd-item.tick .cd-num{color:var(--rose);animation:tickPop .4s ease}
+  @keyframes tickPop{
+    0%{transform:scale(1)}
+    50%{transform:scale(1.18)}
+    100%{transform:scale(1)}
+  }
+  .cd-lbl{
+    font-size:8px;letter-spacing:2px;color:var(--muted);
+    text-transform:uppercase;margin-top:2px;
+  }
+  .cd-sep{
+    color:var(--rose2);font-size:20px;align-self:center;margin-top:-8px;
+    animation:blink 2s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
 
-  /* ═══ COUNTDOWN ═══ */
-  .countdown{display:flex;justify-content:center;gap:14px;margin:22px 0 4px;
-    font-family:'Montserrat',Arial,sans-serif}
-  .cd-item{text-align:center;min-width:52px}
-  .cd-num{font-size:20px;font-weight:500;color:var(--ink);letter-spacing:1px}
-  .cd-lbl{font-size:8px;letter-spacing:2px;color:var(--muted);
-    text-transform:uppercase;margin-top:2px}
-  .cd-sep{color:var(--rose2);font-size:20px;align-self:center;margin-top:-8px}
+  .calendar-wrap{
+    text-align:center;margin:26px auto 6px;padding:0 8px;
+    opacity:0;animation:fadeUp 1s 1.2s ease forwards;
+  }
+  .cal-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:#fff;color:var(--ink);border:1px solid var(--rose2);
+    border-radius:999px;padding:13px 26px;
+    font-family:'Montserrat',Arial,sans-serif;font-size:12px;
+    font-weight:500;letter-spacing:1.5px;text-transform:uppercase;
+    cursor:pointer;text-decoration:none;
+    transition:all .3s cubic-bezier(.2,0,.2,1);
+    box-shadow:0 6px 18px -10px rgba(180,120,140,.4);
+  }
+  .cal-btn:hover{
+    background:var(--rose);color:#fff;border-color:var(--rose);
+    transform:translateY(-2px);
+  }
+  .cal-btn:active{transform:translateY(0) scale(.97)}
 
-  /* ═══ CTA BUTTON ═══ */
-  .cta-wrap{text-align:center;margin:34px auto 24px;padding:0 8px}
+  .cta-wrap{
+    text-align:center;margin:26px auto 24px;padding:0 8px;
+    opacity:0;animation:fadeUp 1s 1.4s ease forwards;
+  }
   .cta{
     display:inline-flex;align-items:center;gap:12px;
     background:linear-gradient(135deg,#d68b99,#c98793);
@@ -59,86 +136,100 @@
     transition:all .3s cubic-bezier(.2,0,.2,1);
     animation:glow 2.6s ease-in-out infinite;
   }
-  .cta:hover{
-    transform:translateY(-2px);
-    box-shadow:0 20px 40px -12px rgba(180,90,110,.75);
-  }
+  .cta:hover{transform:translateY(-2px)}
   .cta:active{transform:translateY(0) scale(.97)}
-  .cta .icon{font-size:18px;line-height:1}
+  .cta .icon{font-size:18px;line-height:1;animation:spin 6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
   @keyframes glow{
     0%,100%{box-shadow:0 14px 30px -12px rgba(180,90,110,.6)}
     50%{box-shadow:0 14px 34px -10px rgba(180,90,110,.85),
          0 0 0 8px rgba(201,135,147,.1)}
   }
-  .cta-hint{font-family:'Montserrat',Arial,sans-serif;font-size:10px;
+  .cta-hint{
+    font-family:'Montserrat',Arial,sans-serif;font-size:10px;
     color:var(--muted);letter-spacing:2px;text-transform:uppercase;
-    margin-top:16px}
-
-  /* ═══ FALLING PETALS ═══ */
-  .petals{position:fixed;top:0;left:0;width:100%;height:100%;
-    pointer-events:none;z-index:1;overflow:hidden}
-  .petal{position:absolute;top:-30px;color:var(--rose2);
-    font-size:14px;opacity:.55;animation:fall linear infinite}
+    margin-top:16px;
+  }
+  .petals{
+    position:fixed;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;z-index:1;overflow:hidden;
+  }
+  .petal{
+    position:absolute;top:-30px;color:var(--rose2);
+    font-size:14px;opacity:.55;animation:fall linear infinite;
+  }
   @keyframes fall{
     0%{transform:translateY(-30px) rotate(0);opacity:0}
     10%{opacity:.6}
     90%{opacity:.4}
     100%{transform:translateY(110vh) rotate(360deg);opacity:0}
   }
-
-  /* ═══ GALLERY ═══ */
   .gallery{display:none}
   .gallery.open{display:block;animation:fade .55s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes fade{
+    from{opacity:0;transform:translateY(14px)}
+    to{opacity:1;transform:none}
+  }
   .gallery-head{text-align:center;padding:24px 4px 18px}
-  .gallery-head h2{font-weight:300;margin:0 0 8px;font-size:28px;
-    letter-spacing:.5px}
-  .gallery-head p{margin:0;color:var(--muted);font-family:'Montserrat',Arial,sans-serif;
-    font-size:10px;letter-spacing:2.5px;text-transform:uppercase}
-
+  .gallery-head h2{
+    font-weight:300;margin:0 0 8px;font-size:28px;letter-spacing:.5px;
+  }
+  .gallery-head p{
+    margin:0;color:var(--muted);font-family:'Montserrat',Arial,sans-serif;
+    font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  }
   .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-  .photo{border:0;padding:0;aspect-ratio:1;overflow:hidden;background:#eee;
-    cursor:pointer;border-radius:6px;position:relative}
-  .photo::after{content:'';position:absolute;inset:0;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.4);border-radius:6px;
-    pointer-events:none}
-  .photo img{width:100%;height:100%;object-fit:cover;display:block;
-    transition:transform .5s cubic-bezier(.2,0,.2,1)}
+  .photo{
+    border:0;padding:0;aspect-ratio:1;overflow:hidden;background:#eee;
+    cursor:pointer;border-radius:6px;position:relative;
+    opacity:0;transform:translateY(20px) scale(.95);
+    animation:photoIn .6s ease forwards;
+  }
+  @keyframes photoIn{to{opacity:1;transform:none}}
+  .photo img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    transition:transform .5s cubic-bezier(.2,0,.2,1);
+  }
   .photo:active img{transform:scale(.96)}
   @media (hover:hover){.photo:hover img{transform:scale(1.06)}}
-
-  .note{text-align:center;margin:24px 0 0;color:var(--muted);
-    font:11px/1.8 'Montserrat',Arial,sans-serif;letter-spacing:.5px}
-
-  /* ═══ VIEWER ═══ */
-  .viewer{position:fixed;inset:0;background:rgba(25,17,19,.97);z-index:50;
-    display:none;align-items:center;justify-content:center;touch-action:none}
+  .note{
+    text-align:center;margin:24px 0 0;color:var(--muted);
+    font:11px/1.8 'Montserrat',Arial,sans-serif;letter-spacing:.5px;
+  }
+  .viewer{
+    position:fixed;inset:0;background:rgba(25,17,19,.97);z-index:50;
+    display:none;align-items:center;justify-content:center;touch-action:none;
+  }
   .viewer.open{display:flex;animation:vin .3s ease}
   @keyframes vin{from{opacity:0}to{opacity:1}}
-  .viewer img{max-width:94vw;max-height:82vh;object-fit:contain;
+  .viewer img{
+    max-width:94vw;max-height:82vh;object-fit:contain;
     user-select:none;border-radius:2px;
-    box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
-  .close,.nav{position:absolute;border:0;color:white;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  }
+  .close,.nav{
+    position:absolute;border:0;color:white;
     background:rgba(255,255,255,.1);backdrop-filter:blur(8px);
     width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
     cursor:pointer;font-family:Arial,sans-serif;font-size:22px;
-    transition:background .2s}
+    transition:background .2s;
+  }
   .close:hover,.nav:hover{background:rgba(255,255,255,.22)}
-  .close{right:16px;top:16px}.prev{left:12px}.next{right:12px}
-  .counter{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  .close{right:16px;top:16px}
+  .prev{left:12px}
+  .next{right:12px}
+  .counter{
+    position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
     color:white;font:12px 'Montserrat',Arial,sans-serif;letter-spacing:2px;
     background:rgba(0,0,0,.35);padding:8px 14px;border-radius:20px;
-    backdrop-filter:blur(8px)}
-
-  .empty{grid-column:1/-1;padding:40px 18px;text-align:center;color:var(--muted);
-    border:1px dashed var(--line);border-radius:12px;
-    font-family:'Montserrat',Arial,sans-serif;font-size:12px}
-
+    backdrop-filter:blur(8px);
+  }
   @media (max-width:480px){
     h1{font-size:28px}
     .cd-num{font-size:17px}
     .cd-item{min-width:44px}
     .cta{padding:16px 34px;font-size:13px}
+    .cal-btn{padding:11px 22px;font-size:11px}
   }
 </style>
 </head>
@@ -152,15 +243,22 @@
     <div class="ornament"><span>✦</span></div>
     <h1>THAN ZAW HTUT <span class="amp">&amp;</span> EI EI PHYO</h1>
     <div class="date">15 • 11 • 2026</div>
-    <div class="countdown" id="countdown">
-      <div class="cd-item"><div class="cd-num" id="cdD">--</div><div class="cd-lbl">Days</div></div>
+    <div class="countdown">
+      <div class="cd-item" id="cdItemD"><div class="cd-num" id="cdD">--</div><div class="cd-lbl">Days</div></div>
       <div class="cd-sep">·</div>
-      <div class="cd-item"><div class="cd-num" id="cdH">--</div><div class="cd-lbl">Hours</div></div>
+      <div class="cd-item" id="cdItemH"><div class="cd-num" id="cdH">--</div><div class="cd-lbl">Hours</div></div>
       <div class="cd-sep">·</div>
-      <div class="cd-item"><div class="cd-num" id="cdM">--</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-item" id="cdItemM"><div class="cd-num" id="cdM">--</div><div class="cd-lbl">Min</div></div>
       <div class="cd-sep">·</div>
-      <div class="cd-item"><div class="cd-num" id="cdS">--</div><div class="cd-lbl">Sec</div></div>
+      <div class="cd-item" id="cdItemS"><div class="cd-num" id="cdS">--</div><div class="cd-lbl">Sec</div></div>
     </div>
+  </section>
+
+  <section class="calendar-wrap">
+    <button class="cal-btn" id="calBtn" type="button">
+      <span class="cal-icon">📅</span>
+      <span>Add to Calendar</span>
+    </button>
   </section>
 
   <section class="cta-wrap">
@@ -186,9 +284,8 @@
   <button id="prev" class="nav prev" type="button" aria-label="Previous">‹</button>
   <img id="viewerImg" alt="Wedding memory">
   <button id="next" class="nav next" type="button" aria-label="Next">›</button>
-  <div id="counter" class="counter">1 / 1</div>
+  <div id="counter" class="counter">1 / 30</div>
 </div>
-
 <script>
 (() => {
   const root = document;
@@ -198,35 +295,84 @@
   const viewerImg = root.getElementById('viewerImg');
   const counter = root.getElementById('counter');
   const openBtn = root.getElementById('openBtn');
+  const calBtn = root.getElementById('calBtn');
+
+  const WEDDING = {
+    title: "THAN ZAW HTUT & EI EI PHYO — Wedding",
+    date: "2026-11-15T09:00:00",
+    endDate: "2026-11-15T14:00:00",
+    location: "မင်္ဂလာဆောင် ခန်းမ",
+    details: "ကျွန်တော်တို့ရဲ့ မင်္ဂလာဆောင်သို့ ကြွရောက်ပေးပါရန် လေးစားစွာ ဖိတ်ခေါ်အပ်ပါသည်။"
+  };
 
   // === PHOTOS_START ===
-  // ⬇️ ဓာတ်ပုံ အသစ် ထည့်ရင် ဒီ array ထဲ ထပ်ထည့်ပါ
-  // ပုံစံ: { src: "https://i.imgur.com/XXXX.jpg", alt: "..." }
   const photos = [
-    { src: "https://i.imgur.com/CHShSk6h.jpg", alt: "Wedding memory 1" }
+    { src: "https://i.postimg.cc/Pvh9xjRq/08c4521ca55e259360993ae9e78fd9ea.webp", alt: "Wedding memory 1" },
+    { src: "https://i.postimg.cc/Fd0wNRG2/0bf3a9045f91905717417cf06ca94e1a.webp", alt: "Wedding memory 2" },
+    { src: "https://i.postimg.cc/c6SLY8qc/12bfd787ceee037b587da82341e2d9ce.webp", alt: "Wedding memory 3" },
+    { src: "https://i.postimg.cc/VrX2m6Dv/29554e79f081defef3e0e88f2508c8bd.webp", alt: "Wedding memory 4" },
+    { src: "https://i.postimg.cc/mhy2S2RJ/29c44544171375e8e2ce5b645ffd00fa.webp", alt: "Wedding memory 5" },
+    { src: "https://i.postimg.cc/0Kf3K4gs/2b46d76db6e53af89cd80a79ed9e40b4.webp", alt: "Wedding memory 6" },
+    { src: "https://i.postimg.cc/DJ1RnZ5D/2cd76d4e21775ed04347ec20a0029e2a.webp", alt: "Wedding memory 7" },
+    { src: "https://i.postimg.cc/1VHTVjkC/3466987ac01a8dec342ed5ae7362fe94.webp", alt: "Wedding memory 8" },
+    { src: "https://i.postimg.cc/Th63mW8y/350ae58c1f28aa16f2bcf6dd6ffcbf6e.webp", alt: "Wedding memory 9" },
+    { src: "https://i.postimg.cc/HcbFdx3R/35e0d65036020545aac73ca01eacebea.webp", alt: "Wedding memory 10" },
+    { src: "https://i.postimg.cc/ZB6X4RVZ/36d222d4ca861e79ddb7e6d85b6f5ec0.webp", alt: "Wedding memory 11" },
+    { src: "https://i.postimg.cc/62CFt3Y6/3d5ac7ea30a3ac7e12b261394ae3ab79.webp", alt: "Wedding memory 12" },
+    { src: "https://i.postimg.cc/8F2x2WBD/448acf3995db8b8072d59e2063e1dc3a.webp", alt: "Wedding memory 13" },
+    { src: "https://i.postimg.cc/XXbYFyMH/4cde46afc9e8771a6a9a68f29c6587ab.webp", alt: "Wedding memory 14" },
+    { src: "https://i.postimg.cc/yWyYTYsK/5bab9faadf061d31137785a4420ae0e8.webp", alt: "Wedding memory 15" },
+    { src: "https://i.postimg.cc/XXk7g746/666bc059965b0ed33b1fc088360cd1d0.webp", alt: "Wedding memory 16" },
+    { src: "https://i.postimg.cc/q60SRT5Z/6e0ea46910f8c43ce16d4bec4dc1840d.webp", alt: "Wedding memory 17" },
+    { src: "https://i.postimg.cc/0KxFQsB0/7200d82a45e1886fbda85c940545d0f4.webp", alt: "Wedding memory 18" },
+    { src: "https://i.postimg.cc/sGyqXrNp/7a097b4ba6cad7aa3eafdd02ffa34fe3.webp", alt: "Wedding memory 19" },
+    { src: "https://i.postimg.cc/30B60csZ/818af84074ab66893c293c9bdbfc432b.webp", alt: "Wedding memory 20" },
+    { src: "https://i.postimg.cc/WDBxBr6P/8260c3e999a4bce41f3d8165d6bbfd26.webp", alt: "Wedding memory 21" },
+    { src: "https://i.postimg.cc/Th63mW8b/836a193db1027b02f0a351101e075066.webp", alt: "Wedding memory 22" },
+    { src: "https://i.postimg.cc/sGyqXrNh/9805a7217913ec04d6e3685560656eec.webp", alt: "Wedding memory 23" },
+    { src: "https://i.postimg.cc/T59S54z9/aa04f4e122622ece856996f26206d86c.webp", alt: "Wedding memory 24" },
+    { src: "https://i.postimg.cc/zLs4sWSr/ae0d6efb5a313cd3ee4ff08e0aa2317b.webp", alt: "Wedding memory 25" },
+    { src: "https://i.postimg.cc/s1rgSZFk/b88678f4a848c1cf84f0636fc3e0563c.webp", alt: "Wedding memory 26" },
+    { src: "https://i.postimg.cc/sBkbkSP5/c6b063d891901fb501acb39f8fcdb975.webp", alt: "Wedding memory 27" },
+    { src: "https://i.postimg.cc/8JLxN5t8/d7d861eba6aeca0e6ef53828f1319c7c.webp", alt: "Wedding memory 28" },
+    { src: "https://i.postimg.cc/kDmg8trp/f52bb718b3d4ec15f98f5324e5d58963.webp", alt: "Wedding memory 29" },
+    { src: "https://i.postimg.cc/k6WLq4fR/faead7763046de3d5cf2969b55ce2b69.webp", alt: "Wedding memory 30" }
   ];
   // === PHOTOS_END ===
 
   let current = 0;
   let startX = 0;
 
-  // ═══ Countdown ═══
-  const target = new Date('2026-11-15T09:00:00');
+  const target = new Date(WEDDING.date);
+  const prevVals = { d:null, h:null, m:null, s:null };
+  const itemMap = { d:'cdItemD', h:'cdItemH', m:'cdItemM', s:'cdItemS' };
+  const numMap  = { d:'cdD', h:'cdH', m:'cdM', s:'cdS' };
+
   function tick(){
     const d = Math.max(0, target - new Date());
-    const days = Math.floor(d / 86400000);
-    const hrs  = Math.floor(d % 86400000 / 3600000);
-    const min  = Math.floor(d % 3600000 / 60000);
-    const sec  = Math.floor(d % 60000 / 1000);
-    const el = id => root.getElementById(id);
-    el('cdD').textContent = String(days).padStart(2,'0');
-    el('cdH').textContent = String(hrs).padStart(2,'0');
-    el('cdM').textContent = String(min).padStart(2,'0');
-    el('cdS').textContent = String(sec).padStart(2,'0');
+    const vals = {
+      d: Math.floor(d / 86400000),
+      h: Math.floor(d % 86400000 / 3600000),
+      m: Math.floor(d % 3600000 / 60000),
+      s: Math.floor(d % 60000 / 1000)
+    };
+    ['d','h','m','s'].forEach(k => {
+      const el = root.getElementById(numMap[k]);
+      const val = String(vals[k]).padStart(2,'0');
+      if (el.textContent !== val){
+        el.textContent = val;
+        if (prevVals[k] !== null){
+          const item = root.getElementById(itemMap[k]);
+          item.classList.remove('tick');
+          void item.offsetWidth;
+          item.classList.add('tick');
+        }
+        prevVals[k] = val;
+      }
+    });
   }
   tick(); setInterval(tick, 1000);
 
-  // ═══ Falling petals ═══
   (function petals(){
     const wrap = root.getElementById('petals');
     const glyphs = ['❀','✿','❁','✾','❃'];
@@ -242,18 +388,66 @@
     }
   })();
 
+  function toCalDate(iso){
+    return iso.replace(/[-:]/g,'').replace(/\.\d+/,'').slice(0,15);
+  }
+
+  function googleCalUrl(){
+    const p = new URLSearchParams({
+      action: 'TEMPLATE',
+      text: WEDDING.title,
+      dates: `${toCalDate(WEDDING.date)}/${toCalDate(WEDDING.endDate)}`,
+      details: WEDDING.details,
+      location: WEDDING.location,
+      ctz: 'Asia/Yangon'
+    });
+    return `https://calendar.google.com/calendar/render?${p}`;
+  }
+
+  function downloadICS(){
+    const uid = 'wedding-' + Date.now() + '@weedingphoto.github.io';
+    const dtstamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'').slice(0,15) + 'Z';
+    const escape = s => String(s).replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+    const ics = [
+      'BEGIN:VCALENDAR','VERSION:2.0',
+      'PRODID:-//Wedding//Invitation//EN','CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+      `DTSTAMP:${dtstamp}`,
+      `DTSTART;TZID=Asia/Yangon:${toCalDate(WEDDING.date)}`,
+      `DTEND;TZID=Asia/Yangon:${toCalDate(WEDDING.endDate)}`,
+      `SUMMARY:${escape(WEDDING.title)}`,
+      `DESCRIPTION:${escape(WEDDING.details)}`,
+      `LOCATION:${escape(WEDDING.location)}`,
+      'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY',
+      'DESCRIPTION:Wedding Tomorrow!','END:VALARM',
+      'END:VEVENT','END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'wedding-invitation.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  calBtn.addEventListener('click', () => {
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)){
+      downloadICS();
+    } else {
+      window.open(googleCalUrl(), '_blank');
+    }
+  });
+
   function openGallery(){
     gallery.classList.add('open');
     setTimeout(() => gallery.scrollIntoView({behavior:'smooth', block:'start'}), 60);
   }
 
   function renderGallery(){
-    if (!photos.length){
-      grid.innerHTML = '<div class="empty">Photos coming soon</div>';
-      return;
-    }
     grid.innerHTML = photos.map((p,i) => `
-      <button class="photo" type="button" data-index="${i}" aria-label="Open photo ${i+1}">
+      <button class="photo" type="button" data-index="${i}" aria-label="Open photo ${i+1}"
+              style="animation-delay:${i * 0.04}s">
         <img loading="lazy" src="${p.src}" alt="${p.alt}">
       </button>
     `).join('');
