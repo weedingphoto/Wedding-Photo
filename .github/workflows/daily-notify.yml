@@ -2,41 +2,108 @@ name: Daily Wedding Notification
 
 on:
   schedule:
-    - cron: '30 2 * * *'
+    # မြန်မာ မနက် 10:00 AM (UTC+6:30) = UTC 3:30
+    - cron: '30 3 * * *'
+    # မြန်မာ ည 8:00 PM (UTC+6:30) = UTC 13:30
+    - cron: '30 13 * * *'
   workflow_dispatch:
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Calculate Days and Send Noti
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Firebase Admin SDK
+        run: npm install firebase-admin@12
+
+      - name: Send FCM Notification
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          WEDDING_DATE="2026-11-15"
-          TODAY=$(date -u +%Y-%m-%d)
+          cat > send-noti.js << 'EOF'
+          const admin = require('firebase-admin');
+
+          const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+          admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount)
+          });
+
+          const WEDDING_DATE = new Date('2026-11-15T09:00:00+06:30');
+          const NOW = new Date();
+          const DIFF = WEDDING_DATE.getTime() - NOW.getTime();
+          const DAYS = Math.max(0, Math.floor(DIFF / (1000 * 60 * 60 * 24)));
+
+          let title = '💐 Wedding Memories';
+          let body = '';
+
+          if (DAYS > 30) {
+            body = `မင်္ဂလာဆောင် ${DAYS} ရက် ကျန်တယ်! 💐`;
+          } else if (DAYS > 7) {
+            body = `မင်္ဂလာဆောင် ${DAYS} ရက် ကျန်တယ်! 🎉`;
+          } else if (DAYS > 1) {
+            body = `မင်္ဂလာဆောင် ${DAYS} ရက် ပဲ ကျန်တော့တယ်! ⏰`;
+          } else if (DAYS === 1) {
+            body = `မနက်ဖန် မင်္ဂလာဆောင်ပါ! 🎊`;
+          } else if (DAYS === 0) {
+            body = `ဒီနေ့ မင်္ဂလာဆောင်ပါ! 🎉💕`;
+          } else {
+            body = `ကျွန်တော်တို့ မင်္ဂလာဆောင် ပြီးသွားပါပြီ 💝`;
+          }
+
+          console.log(`Days: ${DAYS}`);
+          console.log(`Message: ${body}`);
+
+          const message = {
+            topic: 'wedding-all',
+            notification: {
+              title: title,
+              body: body
+            },
+            data: {
+              title: title,
+              body: body,
+              click_action: 'https://wedding2026.neocities.org',
+              icon: 'https://i.postimg.cc/jS6X6dtH/IMG-20261004-133838.jpg'
+            },
+            webpush: {
+              fcm_options: {
+                link: 'https://wedding2026.neocities.org'
+              },
+              notification: {
+                icon: 'https://i.postimg.cc/jS6X6dtH/IMG-20261004-133838.jpg',
+                badge: 'https://i.postimg.cc/jS6X6dtH/IMG-20261004-133838.jpg',
+                vibrate: [200, 100, 200],
+                tag: 'wedding-noti',
+                renotify: true
+              }
+            },
+            android: {
+              priority: 'high',
+              notification: {
+                icon: 'https://i.postimg.cc/jS6X6dtH/IMG-20261004-133838.jpg',
+                color: '#c98793',
+                sound: 'default',
+                clickAction: 'https://wedding2026.neocities.org'
+              }
+            }
+          };
+
+          admin.messaging().send(message)
+            .then((response) => {
+              console.log('✅ Noti ပို့ပြီ:', response);
+            })
+            .catch((error) => {
+              console.error('❌ Error:', error);
+              process.exit(1);
+            });
+          EOF
           
-          WEDDING_SEC=$(date -d "$WEDDING_DATE" +%s)
-          TODAY_SEC=$(date -d "$TODAY" +%s)
-          DAYS=$(( (WEDDING_SEC - TODAY_SEC) / 86400 ))
-          
-          echo "Days remaining: $DAYS"
-          
-          if [ $DAYS -gt 30 ]; then
-            MSG="မင်္ဂလာဆောင် $DAYS ရက် ကျန်တယ်! 💐"
-          elif [ $DAYS -gt 7 ]; then
-            MSG="မင်္ဂလာဆောင် $DAYS ရက် ကျန်တယ်! 🎉"
-          elif [ $DAYS -gt 1 ]; then
-            MSG="မင်္ဂလာဆောင် $DAYS ရက် ပဲ ကျန်တော့တယ်! ⏰"
-          elif [ $DAYS -eq 1 ]; then
-            MSG="မနက်ဖန် မင်္ဂလာဆောင်ပါ! 🎊"
-          elif [ $DAYS -eq 0 ]; then
-            MSG="ဒီနေ့ မင်္ဂလာဆောင်ပါ! 🎉💕"
-          else
-            MSG="ကျွန်တော်တို့ မင်္ဂလာဆောင် ပြီးသွားပါပြီ 💝"
-          fi
-          
-          echo "Message: $MSG"
-          
-          curl -d "$MSG" \
-            -H "Title: Than Zaw Htut & Ei Ei Phyo Wedding" \
-            -H "Tags: wedding,heart" \
-            https://ntfy.sh/thanzaw-eiei-wedding-2026
+          node send-noti.js
