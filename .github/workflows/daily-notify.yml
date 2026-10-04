@@ -1,0 +1,42 @@
+name: Daily Wedding Notification
+
+on:
+  schedule:
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate Days and Send Noti
+        run: |
+          WEDDING_DATE="2026-11-15"
+          TODAY=$(date -u +%Y-%m-%d)
+          
+          WEDDING_SEC=$(date -d "$WEDDING_DATE" +%s)
+          TODAY_SEC=$(date -d "$TODAY" +%s)
+          DAYS=$(( (WEDDING_SEC - TODAY_SEC) / 86400 ))
+          
+          echo "Days remaining: $DAYS"
+          
+          if [ $DAYS -gt 30 ]; then
+            MSG="မင်္ဂလာဆောင် $DAYS ရက် ကျန်တယ်! 💐"
+          elif [ $DAYS -gt 7 ]; then
+            MSG="မင်္ဂလာဆောင် $DAYS ရက် ကျန်တယ်! 🎉"
+          elif [ $DAYS -gt 1 ]; then
+            MSG="မင်္ဂလာဆောင် $DAYS ရက် ပဲ ကျန်တော့တယ်! ⏰"
+          elif [ $DAYS -eq 1 ]; then
+            MSG="မနက်ဖန် မင်္ဂလာဆောင်ပါ! 🎊"
+          elif [ $DAYS -eq 0 ]; then
+            MSG="ဒီနေ့ မင်္ဂလာဆောင်ပါ! 🎉💕"
+          else
+            MSG="ကျွန်တော်တို့ မင်္ဂလာဆောင် ပြီးသွားပါပြီ 💝"
+          fi
+          
+          echo "Message: $MSG"
+          
+          curl -d "$MSG" \
+            -H "Title: Than Zaw Htut & Ei Ei Phyo Wedding" \
+            -H "Tags: wedding,heart" \
+            https://ntfy.sh/thanzaw-eiei-wedding-2026
